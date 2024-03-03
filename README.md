@@ -1,4 +1,3 @@
-# omidsotooni.github.io
-وبسایت شخصی امید ستونی
-
-https://omidsotooni.github.io/
+# hassanmotiei.github.io
+Hassan Motiei's personal website
+https://hassanmotiei.github.io/
