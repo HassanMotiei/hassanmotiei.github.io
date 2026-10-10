@@ -1,0 +1,210 @@
+/* English Passport PWA — progress dashboard styles */
+#english-passport-progress[hidden] { display:none !important; }
+#wrap .ep-180-inline-mount { margin:14px 0 18px; min-width:0; }
+#wrap .ep-180-inline-mount > #english-passport-progress { margin:0; max-width:none; width:100%; padding:0; border:1.5px solid var(--ink); border-radius:6px; background:var(--surface); }
+#wrap .ep-180-inline-mount > #english-passport-progress .ep-shell { padding:16px; }
+#wrap .ep-180-inline-mount > #english-passport-progress .ep-header { border-color:var(--line); border-radius:6px; background:var(--surface-2); padding:17px; }
+#wrap .ep-180-inline-mount > #english-passport-progress .ep-summary-card,
+#wrap .ep-180-inline-mount > #english-passport-progress .ep-phase-card,
+#wrap .ep-180-inline-mount > #english-passport-progress .ep-chart-card { border-color:var(--line); border-radius:6px; background:var(--surface); }
+#wrap .ep-180-inline-mount > #english-passport-progress .ep-day-grid { border-color:var(--line); border-radius:6px; background:var(--surface-2); }
+#wrap .ep-180-inline-mount > #english-passport-progress .ep-day-detail { border-color:var(--line); border-radius:6px; background:var(--surface-2); }
+#wrap .ep-180-inline-mount > #english-passport-progress .ep-btn-secondary { background:var(--surface); border-color:var(--line); color:var(--ink); }
+#wrap .ep-180-inline-mount > #english-passport-progress .ep-phase-tab { background:var(--surface); border-color:var(--line); color:var(--ink); }
+#wrap .ep-180-inline-mount > #english-passport-progress .ep-metric-input { background:var(--surface); border-color:var(--line); }
+#wrap .ep-180-inline-mount > #english-passport-progress .ep-ring:before { background:var(--surface); }
+#wrap .ep-180-inline-mount > #english-passport-progress .ep-day { border-color:var(--line); background:var(--surface); }
+#wrap .ep-180-inline-mount > #english-passport-progress .ep-day.is-locked { background:var(--surface-2); }
+@media (max-width:560px) { #wrap .ep-180-inline-mount > #english-passport-progress .ep-shell { padding:9px; } }
+#english-passport-progress .ep-header-copy { min-width:0; }
+
+#english-passport-progress { margin: 28px auto; width: 100%; max-width: 1240px; color: var(--ep-text, #202938); font-family: inherit; }
+#english-passport-progress * { box-sizing: border-box; }
+#english-passport-progress .ep-shell { --ep-text:#202938; --ep-muted:#6d7787; --ep-border:#e5e9f0; --ep-surface:#fff; --ep-soft:#f6f8fb; --ep-blue:#286fe8; color:var(--ep-text); }
+#english-passport-progress .ep-header { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; padding:24px; border:1px solid var(--ep-border); border-radius:20px; background:linear-gradient(135deg,#f8fbff,#fff 65%); }
+#english-passport-progress .ep-eyebrow { margin:0 0 8px; color:#4779c9; font-size:11px; font-weight:800; letter-spacing:.09em; }
+#english-passport-progress h2 { margin:0; font-size:clamp(22px,3vw,30px); line-height:1.35; }
+#english-passport-progress .ep-subtitle { margin:8px 0 0; color:var(--ep-muted); line-height:1.8; }
+#english-passport-progress .ep-header-actions { display:flex; gap:8px; flex-wrap:wrap; }
+#english-passport-progress .ep-btn { display:inline-flex; align-items:center; justify-content:center; min-height:40px; padding:9px 14px; border-radius:11px; border:1px solid transparent; cursor:pointer; font:inherit; font-size:13px; font-weight:700; transition:transform .15s,background .15s; }
+#english-passport-progress .ep-btn:hover { transform:translateY(-1px); }
+#english-passport-progress .ep-btn-primary { color:#fff; background:#286fe8; }
+#english-passport-progress .ep-btn-primary:hover { background:#1d5fcf; }
+#english-passport-progress .ep-btn-secondary { color:#344054; background:#fff; border-color:#dce2eb; }
+#english-passport-progress .ep-summary-grid { display:grid; grid-template-columns:1.25fr repeat(3,minmax(0,1fr)); gap:14px; margin-top:16px; }
+#english-passport-progress .ep-summary-card { min-width:0; padding:18px; border:1px solid var(--ep-border); border-radius:17px; background:var(--ep-surface); }
+#english-passport-progress .ep-summary-label { color:var(--ep-muted); font-size:12px; font-weight:700; }
+#english-passport-progress .ep-overall-row { display:flex; align-items:center; gap:15px; margin-top:12px; }
+#english-passport-progress .ep-ring { --ep-progress:0; width:76px; height:76px; flex:0 0 76px; display:grid; place-items:center; border-radius:50%; background:conic-gradient(#286fe8 calc(var(--ep-progress)*1%),#e8edf5 0); position:relative; }
+#english-passport-progress .ep-ring:before { content:""; position:absolute; inset:7px; border-radius:50%; background:#fff; }
+#english-passport-progress .ep-ring span { position:relative; font-size:23px; font-weight:800; }
+#english-passport-progress .ep-ring small { font-size:12px; }
+#english-passport-progress .ep-overall-row strong { display:block; font-size:16px; }
+#english-passport-progress .ep-overall-row p,#english-passport-progress .ep-summary-card p { color:var(--ep-muted); font-size:12px; line-height:1.7; margin:6px 0 0; }
+#english-passport-progress .ep-stat-number { font-size:32px; font-weight:850; margin-top:10px; color:#286fe8; }
+#english-passport-progress .ep-stat-text { margin-top:13px; font-size:14px; font-weight:750; line-height:1.6; overflow-wrap:anywhere; }
+#english-passport-progress .ep-section { margin-top:24px; }
+#english-passport-progress .ep-section-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:13px; }
+#english-passport-progress .ep-section-heading h3 { margin:0; font-size:18px; }
+#english-passport-progress .ep-section-heading h4 { margin:0; font-size:15px; }
+#english-passport-progress .ep-section-heading p { margin:5px 0 0; color:var(--ep-muted); font-size:12px; line-height:1.7; }
+#english-passport-progress .ep-phase-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+#english-passport-progress .ep-phase-card { padding:16px; border:1px solid var(--ep-border); border-radius:15px; background:var(--ep-surface); min-width:0; }
+#english-passport-progress .ep-phase-top { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+#english-passport-progress .ep-phase-number { color:#286fe8; font-size:11px; font-weight:800; }
+#english-passport-progress .ep-phase-top strong { font-size:16px; }
+#english-passport-progress .ep-progress-track { height:7px; margin:12px 0; background:#edf0f5; border-radius:99px; overflow:hidden; }
+#english-passport-progress .ep-progress-track span { display:block; height:100%; background:linear-gradient(90deg,#286fe8,#67a0ff); border-radius:99px; transition:width .25s; }
+#english-passport-progress .ep-phase-name { min-height:44px; font-size:13px; font-weight:750; line-height:1.7; }
+#english-passport-progress .ep-phase-card small { display:block; color:var(--ep-muted); margin-top:6px; font-size:11px; }
+#english-passport-progress .ep-legend { display:flex; gap:12px; flex-wrap:wrap; color:var(--ep-muted); font-size:11px; }
+#english-passport-progress .ep-legend span { display:inline-flex; align-items:center; gap:5px; }
+#english-passport-progress .ep-dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+#english-passport-progress .ep-dot.done { background:#13a879; } #english-passport-progress .ep-dot.open { background:#286fe8; } #english-passport-progress .ep-dot.locked { background:#c5cbd5; }
+#english-passport-progress .ep-phase-tabs { display:flex; gap:7px; overflow-x:auto; padding:2px 0 12px; }
+#english-passport-progress .ep-phase-tab { flex:0 0 auto; border:1px solid var(--ep-border); border-radius:999px; background:#fff; padding:8px 13px; font:inherit; font-size:12px; cursor:pointer; }
+#english-passport-progress .ep-phase-tab.active { color:#fff; border-color:#286fe8; background:#286fe8; }
+#english-passport-progress .ep-day-grid { display:grid; grid-template-columns:repeat(15,minmax(0,1fr)); gap:7px; padding:16px; border:1px solid var(--ep-border); border-radius:16px; background:var(--ep-surface); }
+#english-passport-progress .ep-day { display:grid; place-items:center; aspect-ratio:1; min-width:0; padding:0; border:1px solid #dbe3f0; border-radius:10px; background:#f9fbff; color:#286fe8; cursor:pointer; font:inherit; font-size:12px; font-weight:750; }
+#english-passport-progress .ep-day:hover:not(:disabled) { border-color:#286fe8; background:#edf4ff; }
+#english-passport-progress .ep-day.is-selected { outline:2px solid #286fe8; outline-offset:1px; }
+#english-passport-progress .ep-day.is-done { background:#e8f8f1; color:#087d58; border-color:#b9ead6; }
+#english-passport-progress .ep-day.is-locked { color:#a7afbc; background:#f2f4f7; border-color:#e7eaf0; cursor:not-allowed; }
+#english-passport-progress .ep-day svg { width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+#english-passport-progress .ep-day-detail { margin-top:14px; padding:20px; border:1px solid var(--ep-border); border-radius:16px; background:var(--ep-soft); }
+#english-passport-progress .ep-day-detail-heading { display:flex; justify-content:space-between; gap:15px; align-items:flex-start; }
+#english-passport-progress .ep-day-detail-heading h3 { margin:0; font-size:19px; }
+#english-passport-progress .ep-day-detail-heading p { margin:5px 0 0; color:var(--ep-muted); font-size:12px; }
+#english-passport-progress .ep-status { display:inline-flex; white-space:nowrap; padding:6px 10px; border-radius:999px; font-size:11px; font-weight:800; }
+#english-passport-progress .ep-status.complete { color:#087d58; background:#d9f5e9; } #english-passport-progress .ep-status.open { color:#205ec5; background:#e4eeff; } #english-passport-progress .ep-status.locked { color:#687386; background:#e9edf2; }
+#english-passport-progress .ep-lesson-hint { color:var(--ep-muted); font-size:12px; line-height:1.8; }
+#english-passport-progress .ep-day-actions a { text-decoration:none; }
+#english-passport-progress .ep-day-actions { display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 20px; }
+#english-passport-progress .ep-metrics-editor { padding-top:18px; border-top:1px solid #e0e5ed; }
+#english-passport-progress .ep-metrics-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+#english-passport-progress .ep-metric-input { display:block; padding:13px; border:1px solid var(--ep-border); border-radius:12px; background:#fff; font-size:12px; font-weight:750; }
+#english-passport-progress .ep-metric-control { display:flex; align-items:center; gap:12px; margin-top:8px; }
+#english-passport-progress .ep-metric-control input { width:100%; accent-color:#286fe8; }
+#english-passport-progress .ep-metric-control output { flex:0 0 66px; text-align:left; color:var(--ep-muted); font-size:11px; }
+#english-passport-progress .ep-metrics-actions { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:12px; }
+#english-passport-progress .ep-metrics-actions span { color:var(--ep-muted); font-size:11px; line-height:1.6; }
+#english-passport-progress .ep-chart-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+#english-passport-progress .ep-chart-card { min-width:0; padding:17px; border:1px solid var(--ep-border); border-radius:16px; background:var(--ep-surface); }
+#english-passport-progress .ep-chart-title { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+#english-passport-progress .ep-chart-title h4 { margin:0; font-size:14px; }
+#english-passport-progress .ep-chart-title select { max-width:190px; padding:7px; border:1px solid var(--ep-border); border-radius:8px; background:#fff; font:inherit; font-size:11px; }
+#english-passport-progress .ep-chart-chip { padding:5px 8px; border-radius:8px; background:#f0f4fa; color:#586477; font-size:11px; }
+#english-passport-progress .ep-chart-wrap { width:100%; margin-top:10px; }
+#english-passport-progress .ep-chart-wrap canvas { display:block; width:100%; max-width:100%; }
+#english-passport-progress .ep-chart-note { color:var(--ep-muted); font-size:11px; line-height:1.7; margin:6px 0 0; }
+#english-passport-progress .ep-metric-legend { display:flex; gap:12px; flex-wrap:wrap; font-size:11px; color:var(--ep-muted); }
+#english-passport-progress .ep-metric-legend span { display:inline-flex; align-items:center; gap:5px; }
+#english-passport-progress .ep-metric-legend i { width:8px; height:8px; border-radius:2px; display:inline-block; }
+#english-passport-progress .ep-footer { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:18px; padding:14px 4px; color:var(--ep-muted); font-size:11px; line-height:1.8; }
+#english-passport-progress .ep-text-button { border:0; padding:5px; background:transparent; color:#b54747; font:inherit; cursor:pointer; white-space:nowrap; }
+#english-passport-progress .ep-toast { position:sticky; bottom:12px; z-index:10; width:fit-content; max-width:100%; margin:12px auto 0; padding:10px 15px; border-radius:12px; background:#202938; color:#fff; box-shadow:0 5px 22px #0002; font-size:12px; }
+#english-passport-progress button:focus-visible,#english-passport-progress input:focus-visible,#english-passport-progress select:focus-visible { outline:3px solid #8bb5ff; outline-offset:2px; }
+@media (max-width:800px) { #english-passport-progress .ep-header { flex-direction:column; padding:18px; } #english-passport-progress .ep-summary-grid { grid-template-columns:1fr 1fr; } #english-passport-progress .ep-overall-card { grid-column:1/-1; } #english-passport-progress .ep-phase-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } #english-passport-progress .ep-day-grid { grid-template-columns:repeat(10,minmax(0,1fr)); gap:6px; padding:10px; } #english-passport-progress .ep-chart-grid { grid-template-columns:1fr; } }
+@media (max-width:480px) { #english-passport-progress .ep-summary-grid { grid-template-columns:1fr; } #english-passport-progress .ep-overall-card { grid-column:auto; } #english-passport-progress .ep-phase-grid { grid-template-columns:1fr; } #english-passport-progress .ep-phase-name { min-height:0; } #english-passport-progress .ep-day-grid { grid-template-columns:repeat(6,minmax(0,1fr)); gap:7px; } #english-passport-progress .ep-day { border-radius:8px; font-size:11px; } #english-passport-progress .ep-metrics-grid { grid-template-columns:1fr; } #english-passport-progress .ep-day-detail { padding:14px; } #english-passport-progress .ep-day-detail-heading { flex-direction:column; } #english-passport-progress .ep-footer { flex-direction:column; align-items:flex-start; } #english-passport-progress .ep-header-actions { width:100%; } #english-passport-progress .ep-header-actions .ep-btn { flex:1; } }
+@media (prefers-color-scheme:dark) { #english-passport-progress .ep-shell { --ep-text:#e8edf5; --ep-muted:#a7b0c0; --ep-border:#303a4b; --ep-surface:#171d28; --ep-soft:#1b2330; } #english-passport-progress .ep-header { background:linear-gradient(135deg,#1b2738,#171d28 70%); } #english-passport-progress .ep-ring:before { background:#171d28; } #english-passport-progress .ep-btn-secondary,#english-passport-progress .ep-phase-tab,#english-passport-progress .ep-metric-input,#english-passport-progress .ep-chart-title select { background:#202938; color:#e8edf5; border-color:#3a4659; } #english-passport-progress .ep-day { background:#202b3b; border-color:#344259; } #english-passport-progress .ep-day.is-done { background:#15392f; border-color:#24664f; color:#8ee2bd; } #english-passport-progress .ep-day.is-locked { background:#20242d; border-color:#30333b; color:#777f8d; } #english-passport-progress .ep-progress-track { background:#303a4b; } #english-passport-progress .ep-metrics-editor { border-color:#303a4b; } #english-passport-progress .ep-chart-chip { background:#293344; color:#c0cada; } }
+
+/* User-requested checklist assessment and AI coach sections */
+.ep-assessment-table-wrap{overflow-x:auto;border:1px solid var(--ep-border,var(--line,#d8deea));border-radius:14px}
+.ep-assessment-table{width:100%;border-collapse:collapse;min-width:440px;text-align:right}
+.ep-assessment-table th,.ep-assessment-table td{padding:11px 13px;border-bottom:1px solid var(--ep-border,var(--line,#d8deea));vertical-align:top}
+.ep-assessment-table th{background:var(--ep-surface-soft,var(--surface-2,#f5f7fb));font-weight:800}
+.ep-assessment-table tr:last-child td{border-bottom:0}
+.ep-assessment-table td:first-child{white-space:nowrap;font-weight:750;width:112px}
+.ep-assessment-intro{margin:16px 0 8px;font-weight:750}
+.ep-assessment-list{margin:0;padding-right:22px;line-height:1.9}
+.ep-assessment-list li{margin:5px 0}
+.ep-coach-prompt-text{display:block;width:100%;min-height:190px;resize:vertical;padding:13px;border:1px solid var(--ep-border,var(--line,#d8deea));border-radius:12px;background:var(--ep-surface-soft,var(--surface-2,#f5f7fb));color:inherit;font:inherit;line-height:1.9;direction:rtl;text-align:right}
+.ep-assessment-note{padding:15px 17px;border:1px solid var(--ep-border,var(--line,#d8deea));border-right:4px solid var(--ep-accent,#3984f5);border-radius:12px;line-height:1.9;background:var(--ep-surface-soft,var(--surface-2,#f5f7fb))}
+@media(max-width:640px){.ep-assessment-table th,.ep-assessment-table td{padding:9px 10px}.ep-coach-prompt-text{min-height:230px}}
+
+
+/* Checklist usability pass: less visual noise, clearer hierarchy, mobile-first controls */
+#english-passport-progress .ep-checklist-toolbar{display:flex;flex-direction:column;gap:10px;margin:10px 0 14px}
+#english-passport-progress .ep-expand-actions{display:flex;gap:8px;flex-wrap:wrap}
+#english-passport-progress .ep-phase-day-groups{display:grid;gap:12px}
+#english-passport-progress .ep-phase-day-section[hidden]{display:none!important}
+#english-passport-progress .ep-phase-day-section{border:1px solid var(--ep-border);border-radius:14px;padding:12px;background:var(--ep-surface)}
+#english-passport-progress .ep-phase-day-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:0 2px 8px;line-height:1.6}
+#english-passport-progress .ep-phase-day-heading strong{font-size:14px}
+#english-passport-progress .ep-phase-day-heading span{font-size:12px;color:var(--ep-muted);white-space:nowrap}
+#english-passport-progress .ep-phase-day-section .ep-day-grid{padding:8px;border:0;background:transparent;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px}
+#english-passport-progress .ep-lesson-hint{padding:14px 16px;border-right:4px solid #3984f5;border-radius:12px;background:var(--ep-surface);line-height:1.9}
+#english-passport-progress .ep-lesson-hint p{margin:5px 0 8px}
+#english-passport-progress .ep-lesson-hint small{display:block;color:var(--ep-muted);font-size:12px}
+#english-passport-progress .ep-checkpoint-jump{padding:7px 10px;font-size:12px;white-space:nowrap}
+#english-passport-progress .ep-assessment-section .ep-assessment-list{line-height:1.9}
+#english-passport-progress .ep-coach-section .ep-section-heading{align-items:center}
+#english-passport-progress .ep-coach-prompt-text{font-size:13px}
+#english-passport-progress .ep-footer{align-items:flex-start}
+#english-passport-progress .ep-section-heading p{max-width:760px;line-height:1.8}
+@media(max-width:800px){#english-passport-progress .ep-phase-day-section .ep-day-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(max-width:480px){#english-passport-progress .ep-expand-actions .ep-btn{flex:1;min-width:130px}#english-passport-progress .ep-phase-day-heading{flex-direction:column;gap:2px}#english-passport-progress .ep-checkpoint-jump{white-space:normal}#english-passport-progress .ep-coach-section .ep-section-heading{align-items:flex-start;flex-direction:column}}
+
+
+/* Day finder: keyboard-friendly compact search without expanding the whole 180-day list */
+#english-passport-progress .ep-day-search-wrap{display:block;position:relative;max-width:620px;width:100%;margin:2px 0 4px;font-size:12px;color:var(--ep-muted)}
+#english-passport-progress .ep-day-search-wrap>span{display:block;margin-bottom:5px;font-weight:750}
+#english-passport-progress .ep-day-search-wrap input{width:100%;min-height:42px;border:1px solid var(--ep-border);border-radius:10px;background:var(--ep-surface);color:var(--ep-text);padding:10px 12px;font:inherit;font-size:14px;outline-offset:2px}
+#english-passport-progress .ep-day-search-results{position:absolute;z-index:20;top:100%;right:0;left:0;max-height:300px;overflow:auto;border:1px solid var(--ep-border);border-radius:12px;background:var(--ep-surface);box-shadow:0 12px 32px rgba(20,35,60,.16)}
+#english-passport-progress .ep-day-search-results[hidden]{display:none}
+#english-passport-progress .ep-day-search-result{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;padding:10px 12px;border:0;border-bottom:1px solid var(--ep-border);background:transparent;color:var(--ep-text);text-align:right;font:inherit;cursor:pointer}
+#english-passport-progress .ep-day-search-result:last-child{border-bottom:0}
+#english-passport-progress .ep-day-search-result:hover,#english-passport-progress .ep-day-search-result:focus{background:var(--ep-soft)}
+#english-passport-progress .ep-day-search-result strong{white-space:nowrap}
+#english-passport-progress .ep-day-search-result span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#english-passport-progress .ep-day-search-result small{color:var(--ep-muted);white-space:nowrap}
+#english-passport-progress .ep-day-search-empty{margin:0;padding:12px}
+@media(max-width:540px){#english-passport-progress .ep-day-search-result{grid-template-columns:auto minmax(0,1fr)}#english-passport-progress .ep-day-search-result small{display:none}}
+
+#english-passport-progress .ep-daily-instructions{margin:14px 0;padding:18px;border:1px solid var(--ep-border);border-radius:14px;background:var(--ep-soft);line-height:1.9;color:var(--ep-text)}
+#english-passport-progress .ep-daily-context{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+#english-passport-progress .ep-daily-context span{display:inline-flex;padding:4px 9px;border-radius:8px;background:var(--ep-soft);color:var(--ep-muted);font-size:12px}
+#english-passport-progress .ep-daily-goal{margin:0 0 14px;padding:10px 12px;border-right:3px solid var(--ep-primary);background:var(--ep-soft);border-radius:8px}
+#english-passport-progress .ep-daily-instructions h4{margin:12px 0 6px;font-size:15px}
+#english-passport-progress .ep-daily-instructions ol{margin:6px 0;padding-right:22px}
+#english-passport-progress .ep-daily-instructions li{padding:3px 0;margin-bottom:5px}
+#english-passport-progress .ep-daily-output{margin-top:14px;padding:12px 14px;border:1px solid var(--ep-border);border-radius:10px;background:var(--ep-soft)}
+#english-passport-progress .ep-daily-output p{margin:4px 0 0}
+#english-passport-progress .ep-daily-note{font-size:12px;color:var(--ep-muted);margin:12px 0 0}
+@media(max-width:480px){#english-passport-progress .ep-daily-instructions{padding:13px}#english-passport-progress .ep-daily-context{flex-direction:column;align-items:flex-start}}
+
+#english-passport-progress .ep-daily-instructions{margin:14px 0;padding:18px;border:1px solid var(--ep-border);border-radius:14px;background:var(--ep-soft);line-height:1.9;color:var(--ep-text)}
+#english-passport-progress .ep-daily-context{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+#english-passport-progress .ep-daily-context span{display:inline-flex;padding:4px 9px;border-radius:8px;background:var(--ep-soft);color:var(--ep-muted);font-size:12px}
+#english-passport-progress .ep-daily-goal{margin:0 0 14px;padding:10px 12px;border-right:3px solid var(--ep-primary);background:var(--ep-soft);border-radius:8px}
+#english-passport-progress .ep-daily-instructions h4{margin:12px 0 6px;font-size:15px}
+#english-passport-progress .ep-daily-instructions ol{margin:6px 0;padding-right:22px}
+#english-passport-progress .ep-daily-instructions li{padding:3px 0;margin-bottom:5px}
+#english-passport-progress .ep-daily-output{margin-top:14px;padding:12px 14px;border:1px solid var(--ep-border);border-radius:10px;background:var(--ep-soft)}
+#english-passport-progress .ep-daily-output p{margin:4px 0 0}
+#english-passport-progress .ep-daily-note{font-size:12px;color:var(--ep-muted);margin:12px 0 0}
+@media(max-width:480px){#english-passport-progress .ep-daily-instructions{padding:13px}#english-passport-progress .ep-daily-context{flex-direction:column;align-items:flex-start}}
+
+
+/* Collapsible program guide: daily time budget, milestones, resources and rules */
+#english-passport-progress .ep-program-guide{padding:0;overflow:hidden}
+#english-passport-progress .ep-program-guide>summary{display:flex;justify-content:space-between;align-items:center;gap:14px;cursor:pointer;list-style:none;padding:17px 20px;background:var(--ep-surface-soft,var(--surface-2,#f5f7fb));border-radius:14px}
+#english-passport-progress .ep-program-guide>summary::-webkit-details-marker{display:none}
+#english-passport-progress .ep-program-guide>summary>span:first-child{display:grid;gap:4px}
+#english-passport-progress .ep-program-guide>summary strong{font-size:16px}
+#english-passport-progress .ep-program-guide>summary small{font-size:12px;color:var(--ep-muted)}
+#english-passport-progress .ep-guide-toggle{font-size:12px;color:var(--ep-primary);white-space:nowrap}
+#english-passport-progress .ep-program-guide[open] .ep-guide-toggle:after{content:' · راهنما باز است'}
+#english-passport-progress .ep-program-guide-body{padding:18px;line-height:1.9}
+#english-passport-progress .ep-program-guide-body h4{font-size:15px;margin:18px 0 8px}
+#english-passport-progress .ep-guide-intro{margin:0 0 14px}
+#english-passport-progress .ep-guide-table-wrap{width:100%;overflow-x:auto;border:1px solid var(--ep-border,var(--line,#d8deea));border-radius:12px;margin:8px 0 14px}
+#english-passport-progress .ep-guide-table{width:100%;border-collapse:collapse;min-width:510px;text-align:right}
+#english-passport-progress .ep-guide-table th,#english-passport-progress .ep-guide-table td{padding:9px 11px;border-bottom:1px solid var(--ep-border,var(--line,#d8deea));vertical-align:top}
+#english-passport-progress .ep-guide-table th{background:var(--ep-surface-soft,var(--surface-2,#f5f7fb));font-weight:800;white-space:nowrap}
+#english-passport-progress .ep-guide-table tbody tr:last-child td{border-bottom:0}
+#english-passport-progress .ep-guide-total{background:var(--ep-surface-soft,var(--surface-2,#f5f7fb))}
+#english-passport-progress .ep-guide-callout{padding:11px 13px;border-right:3px solid var(--ep-primary);background:var(--ep-soft);border-radius:8px;margin:12px 0}
+#english-passport-progress .ep-guide-list{padding-right:23px;margin:8px 0}
+#english-passport-progress .ep-guide-list li{margin:7px 0}
+@media(max-width:480px){#english-passport-progress .ep-program-guide>summary{padding:14px;align-items:flex-start}#english-passport-progress .ep-guide-toggle{font-size:11px}#english-passport-progress .ep-program-guide-body{padding:13px}}
