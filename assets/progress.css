@@ -208,3 +208,48 @@
 #english-passport-progress .ep-guide-list{padding-right:23px;margin:8px 0}
 #english-passport-progress .ep-guide-list li{margin:7px 0}
 @media(max-width:480px){#english-passport-progress .ep-program-guide>summary{padding:14px;align-items:flex-start}#english-passport-progress .ep-guide-toggle{font-size:11px}#english-passport-progress .ep-program-guide-body{padding:13px}}
+
+
+/* Button refinement v12: compact labels, consistent sizing, mobile-friendly wrapping */
+#english-passport-progress .ep-btn,
+#english-passport-progress .ep-phase-tab,
+#english-passport-progress .ep-checkpoint-jump {
+  line-height: 1.45;
+  text-align: center;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  max-width: 100%;
+}
+#english-passport-progress .ep-btn {
+  min-height: 42px;
+  padding: 9px 13px;
+  gap: 6px;
+}
+#english-passport-progress .ep-header-actions,
+#english-passport-progress .ep-expand-actions,
+#english-passport-progress .ep-day-actions,
+#english-passport-progress .ep-metrics-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+#english-passport-progress .ep-day-actions .ep-btn { flex: 0 1 auto; }
+#english-passport-progress .ep-phase-tab { flex: 0 0 auto; padding: 8px 11px; }
+#english-passport-progress .ep-checkpoint-jump { min-width: 0; }
+#english-passport-progress .ep-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+@media (max-width: 560px) {
+  #english-passport-progress .ep-header-actions { width: 100%; }
+  #english-passport-progress .ep-header-actions .ep-btn { flex: 1 1 130px; }
+  #english-passport-progress .ep-expand-actions .ep-btn { flex: 1 1 125px; min-width: 0; }
+  #english-passport-progress .ep-day-actions .ep-btn { flex: 1 1 calc(50% - 8px); min-width: 0; }
+  #english-passport-progress .ep-day-actions a.ep-btn { display: inline-flex; }
+  #english-passport-progress .ep-phase-tabs { gap: 6px; }
+  #english-passport-progress .ep-phase-tab { font-size: 12px; padding: 8px 10px; }
+  #english-passport-progress .ep-checkpoint-jump { padding: 8px 9px; }
+}
+@media (max-width: 360px) {
+  #english-passport-progress .ep-day-actions .ep-btn { flex-basis: 100%; }
+  #english-passport-progress .ep-btn { padding: 9px 10px; font-size: 12px; }
+}

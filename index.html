@@ -26449,7 +26449,7 @@ window.ENGLISH_PASSPORT_DAYS = [{"day":1,"title":"Day 001 — ارزیابی ا�
   const clamp = (value, min, max) => Math.min(max, Math.max(min, Number(value) || 0));
 
   function freshState() {
-    return { version: 3, completed: [], metrics: {}, tasks: {}, notes: {}, dayEdits: {}, doneAt: {}, startDate: null, updatedAt: new Date().toISOString() };
+    return { version: 3, completed: [], metrics: {}, tasks: {}, notes: {}, dayEdits: {}, doneAt: {}, journal: {}, tools: {}, startDate: null, updatedAt: new Date().toISOString() };
   }
   function loadState() {
     try {
@@ -26469,6 +26469,8 @@ window.ENGLISH_PASSPORT_DAYS = [{"day":1,"title":"Day 001 — ارزیابی ا�
       state.notes = parsed.notes && typeof parsed.notes === 'object' ? parsed.notes : {};
       state.dayEdits = parsed.dayEdits && typeof parsed.dayEdits === 'object' ? parsed.dayEdits : {};
       state.doneAt = parsed.doneAt && typeof parsed.doneAt === 'object' ? parsed.doneAt : {};
+      state.journal = parsed.journal && typeof parsed.journal === 'object' ? parsed.journal : {};
+      state.tools = parsed.tools && typeof parsed.tools === 'object' ? parsed.tools : {};
       state.startDate = /^\d{4}-\d{2}-\d{2}$/.test(String(parsed.startDate || '')) ? parsed.startDate : null;
       state.updatedAt = parsed.updatedAt || state.updatedAt;
       return state;
@@ -26969,6 +26971,38 @@ window.ENGLISH_PASSPORT_DAYS = [{"day":1,"title":"Day 001 — ارزیابی ا�
     root.innerHTML = `
       <div class="ep-shell" dir="rtl">
         <header class="ep-header"><div class="ep-header-copy"><p class="ep-eyebrow">ENGLISH PASSPORT · 432-SESSION ROADMAP</p><h2>داشبورد پیشرفت یادگیری</h2><p class="ep-subtitle">پیشرفتت را ثبت کن، مرحله‌ها را دنبال کن و روند چهار مهارت را ببین.</p></div><div class="ep-header-actions"><button type="button" class="ep-btn ep-btn-primary" data-action="continue-next" aria-label="ادامه از اولین روز تکمیل‌نشده">ادامه از روز بعدی</button><button type="button" class="ep-btn ep-btn-secondary" data-action="today-content" aria-label="رفتن به محتوای آموزشی امروز">محتوای آموزشی امروز</button></div></header>
+        <div class="ep-summary-grid">
+          <article class="ep-summary-card ep-overall-card"><div class="ep-summary-label">پیشرفت کل</div><div class="ep-overall-row"><div class="ep-ring" style="--ep-progress:${overall}"><span>${overall}<small>٪</small></span></div><div><strong>${count} از ${TOTAL_DAYS} روز</strong><p>${count === TOTAL_DAYS ? 'تبریک! تمام ۴۳۲ جلسهٔ برنامه را تکمیل کردی.' : `مرحله فعلی: ${activePhase} از ۱۱`}</p></div></div></article>
+          <article class="ep-summary-card"><div class="ep-summary-label">روزهای باقی‌مانده</div><div class="ep-stat-number">${TOTAL_DAYS-count}</div><p>از ${TOTAL_DAYS} روز کل برنامه</p></article>
+          <article class="ep-summary-card"><div class="ep-summary-label">روز بعدی قابل انجام</div><div class="ep-stat-number">${count === TOTAL_DAYS ? '✓' : Math.min(TOTAL_DAYS, firstIncompleteDay())}</div><p>${count === TOTAL_DAYS ? 'همه روزها تکمیل شده‌اند' : 'با تکمیل روز جاری، روز بعد باز می‌شود.'}</p></article>
+          <article class="ep-summary-card ep-week-card" data-ep-week></article>
+        </div>
+        <details class="ep-section ep-collapsible-section" open><summary class="ep-section-heading ep-collapsible-summary"><span class="ep-collapsible-heading-copy"><strong>📈 پیشرفت مرحله‌ها</strong><small>بازه‌های مرحله‌ها مطابق برنامهٔ اصلی و متناسب با هر نقطهٔ عطف هستند.</small></span></summary><div class="ep-collapsible-content"><div class="ep-phase-grid">${phaseCards}</div></div></details>
+        <section class="ep-section" id="ep-checklist-section"><div class="ep-section-heading"><div><h3>چک‌لیست تعاملی ۴۳۲ جلسه‌ای</h3><p>هر روز ۳ ساعت برنامه دارد. برای خلوت ماندن صفحه، فقط مرحله انتخاب‌شده باز است؛ با «باز کردن همه مراحل» همه روزها را یکجا ببین.</p></div><div class="ep-legend"><span><i class="ep-dot done"></i> تکمیل‌شده</span><span><i class="ep-dot open"></i> قابل انجام</span><span><i class="ep-dot locked"></i> قفل</span></div></div><div class="ep-checklist-toolbar"><label class="ep-day-search-wrap"><span>جستجوی روز</span><input type="search" data-day-search placeholder="شماره یا عنوان روز را بنویس…" autocomplete="off" aria-label="جستجو در ۴۳۲ جلسه"><div class="ep-day-search-results" data-day-search-results hidden></div></label><div class="ep-phase-tabs">${PHASES.map((phase,i)=>`<button type="button" class="ep-phase-tab ${phaseFor(activeDay)===i+1?'active':''}" data-phase-jump="${i+1}">مرحله ${i+1} · ${phase.start}–${phase.end}</button>`).join('')}</div><div class="ep-checklist-tools"><label class="ep-day-filter-wrap"><span>نمایش روزها</span><select data-day-filter aria-label="فیلتر وضعیت روزها"><option value="all">همه روزها</option><option value="incomplete">تکمیل‌نشده‌ها</option><option value="complete">تکمیل‌شده‌ها</option><option value="available">روزهای قابل انجام</option></select></label><div class="ep-expand-actions"><button type="button" class="ep-btn ep-btn-secondary" data-action="toggle-all-phases" aria-expanded="${expandedPhases.size === PHASES.length ? 'true' : 'false'}">${expandedPhases.size === PHASES.length ? 'بستن همه مراحل' : 'باز کردن همه مراحل'}</button></div></div></div><div class="ep-phase-day-groups">${phaseDayGrids}</div>
+          <div class="ep-day-detail"><div class="ep-day-detail-heading"><div><span class="ep-eyebrow">${dayUnlocked ? 'روز قابل انجام' : 'روز قفل‌شده'}</span><h3>${escapeHTML(dayTitle(activeDay))}</h3><p>جلسه ${activeDay} از ۴۳۲ · مرحله ${phaseFor(activeDay)}${dayDate(activeDay) ? ' · تاریخ برنامه: ' + escapeHTML(dayDate(activeDay)) : ''}</p></div><span class="ep-status ${dayComplete?'complete':dayUnlocked?'open':'locked'}">${dayComplete?'تکمیل شده':dayUnlocked?'آماده شروع':'قفل است'}</span></div>
+          <div class="ep-day-quick-tools"><button type="button" class="ep-btn ep-btn-secondary ep-edit-day-button" data-action="toggle-day-content-editor" data-day="${activeDay}" aria-expanded="false">✏️ ویرایش محتوای روز</button><button type="button" class="ep-btn ep-btn-secondary" data-action="copy-day-summary" data-day="${activeDay}">📋 کپی خلاصه روز</button></div>
+          ${dayDetailMarkup(activeDay)}
+          ${dayContentEditorMarkup(activeDay)}
+          <section class="ep-lesson-notes">
+            <h4>محتوای آموزشی روز ${activeDay}</h4>
+            <p>توضیحات کامل درس، متن Listening، عبارت‌ها، تمرین Speaking، گرامر و تکلیف این روز را اینجا وارد کن. محتوای هر روز جداگانه ذخیره می‌شود و در فایل پشتیبان برنامه هم قرار می‌گیرد.</p>
+            <textarea data-lesson-notes aria-label="محتوای آموزشی روز ${activeDay}" placeholder="محتوای آموزشی این روز را اینجا وارد یا ویرایش کن…">${escapeHTML(typeof state.notes[String(activeDay)] === 'string' ? state.notes[String(activeDay)] : '')}</textarea>
+            <div class="ep-lesson-content-actions"><button type="button" class="ep-btn ep-btn-primary" data-action="save-lesson-notes">ذخیره محتوا</button><button type="button" class="ep-btn ep-btn-secondary" data-action="preview-lesson-notes">👁 پیش‌نمایش</button></div><div>ذخیره محلی در همین مرورگر</div>
+            <div class="ep-lesson-preview-overlay" data-lesson-preview-overlay hidden role="presentation">
+              <section class="ep-lesson-preview-modal" role="dialog" aria-modal="true" aria-labelledby="ep-lesson-preview-title">
+                <header class="ep-lesson-preview-header"><h3 id="ep-lesson-preview-title">پیش‌نمایش محتوای آموزشی روز ${activeDay}</h3><button type="button" class="ep-btn ep-btn-secondary ep-lesson-preview-close" data-action="close-lesson-preview" aria-label="بستن پیش‌نمایش">✕</button></header>
+                <div class="ep-lesson-preview-body" data-lesson-preview-body></div>
+                <footer class="ep-lesson-preview-footer"><button type="button" class="ep-btn ep-btn-primary" data-action="close-lesson-preview">بستن پیش‌نمایش</button></footer>
+              </section>
+            </div>
+          </section>
+          <div class="ep-day-actions"><button type="button" class="ep-btn ep-btn-secondary" data-action="copy-day-title">کپی عنوان این روز</button>${findLessonTarget(activeDay) ? `<button type="button" class="ep-btn ep-btn-secondary" data-action="open-lesson" data-day="${activeDay}">رفتن به محتوای روز</button>` : ''}${dayUnlocked && !dayComplete ? `<button type="button" class="ep-btn ep-btn-primary" data-action="complete-day" data-day="${activeDay}">تکمیل روز ${activeDay}</button>` : ''}${dayComplete ? `<button type="button" class="ep-btn ep-btn-secondary" data-action="undo-day" data-day="${activeDay}">برگرداندن به حالت ناتمام</button>` : ''}${dayComplete && activeDay < TOTAL_DAYS && isUnlocked(nextDay) ? `<button type="button" class="ep-btn ep-btn-primary" data-action="next-day">رفتن به روز بعد ←</button>` : ''}</div>
+          <div class="ep-metrics-editor"><div class="ep-section-heading"><div><h4>ثبت شاخص‌های روز ${activeDay}</h4><p>برای هر شاخص عددی از ۰ تا ۱۰۰ انتخاب کن. ثبت شاخص‌ها مستقل از تیک تکمیل روز است.</p></div></div><div class="ep-metrics-grid">${dayMetrics}</div><div class="ep-metrics-actions"><button type="button" class="ep-btn ep-btn-secondary" data-action="save-metrics" ${dayUnlocked ? '' : 'disabled'}>ذخیره شاخص‌ها</button><span>مقدار «ثبت نشده» در نمودار به‌عنوان صفر یا نمره واقعی در نظر گرفته نمی‌شود.</span></div></div>
+        </div></section>
+        <details class="ep-section ep-assessment-section ep-collapsible-section"><summary class="ep-section-heading ep-collapsible-summary"><span class="ep-collapsible-heading-copy"><strong>📝 ارزیابی‌های دوره‌ای</strong><small>در روزهای مشخص مکث کن، نمونه‌های واقعی را بررسی کن و چهار شاخص را در پنل همان روز ثبت کن.</small></span></summary><div class="ep-collapsible-content"><div class="ep-assessment-table-wrap"><table class="ep-assessment-table"><thead><tr><th>روز</th><th>نقطهٔ ارزیابی</th><th>تمرکز ارزیابی</th><th>اقدام</th></tr></thead><tbody>${CHECKPOINTS.map(c=>`<tr><td>روز ${c.day}</td><td>${escapeHTML(c.title)}</td><td>${escapeHTML(c.focus)}</td><td><button type="button" class="ep-btn ep-btn-secondary ep-checkpoint-jump" data-checkpoint-day="${c.day}">رفتن به ارزیابی</button></td></tr>`).join('')}</tbody></table></div><p class="ep-assessment-intro">چهار معیار ارزیابی</p><ul class="ep-assessment-list"><li><strong>Listening:</strong> درک پیام اصلی، جزئیات و عبارت‌های پیوسته.</li><li><strong>Speaking:</strong> مدت صحبت مستقل، وضوح، پاسخ‌دادن و گسترش ایده.</li><li><strong>Naturalness:</strong> طبیعی‌بودن عبارت‌ها، اتصال کلمات و روانی بیان.</li><li><strong>IELTS:</strong> دقت پاسخ، مدیریت زمان و عملکرد متناسب با مهارت‌های آزمون.</li></ul><div class="ep-assessment-note" style="margin-top:14px">نتیجه را بر اساس نمونهٔ ضبط‌شده، پاسخ‌های درست و خطاهای واقعی ثبت کن؛ درصدها ابزار مقایسه‌اند، نه نمرهٔ رسمی CEFR یا IELTS.</div></div></details>
+        <section class="ep-section ep-coach-section"><div class="ep-section-heading"><div><h3>پرامپت مربی مکالمهٔ هوش مصنوعی</h3><p>متن را کپی کن و در گفت‌وگوی صوتی/متنی مربی قرار بده؛ عنوان روز را هم به آن بده.</p></div><button type="button" class="ep-btn ep-btn-primary" data-action="copy-coach-prompt">کپی پرامپت</button></div><textarea class="ep-coach-prompt-text" id="ep-coach-prompt" spellcheck="false">${escapeHTML(COACH_PROMPT)}</textarea><div class="ep-assessment-note" style="margin-top:12px">روش پیشنهادی: یک سؤال در هر نوبت، تمرکز روی صحبت‌کردن خودت، حداکثر سه خطای مهم در هر بازخورد و تکرار پاسخ اصلاح‌شده.</div></section>
+        <section class="ep-section"><div class="ep-section-heading"><div><h3>گزارش نموداری</h3><p>گزارش بر اساس داده‌هایی است که در همین مرورگر ثبت کرده‌ای.</p></div></div><div class="ep-chart-grid"><article class="ep-chart-card"><div class="ep-chart-title"><h4>روند پیشرفت</h4><select data-trend-mode aria-label="نوع روند"><option value="completed" ${trendMode==='completed'?'selected':''}>تعداد روزهای تکمیل‌شده</option><option value="percent" ${trendMode==='percent'?'selected':''}>درصد پیشرفت تجمعی</option></select></div><div class="ep-chart-wrap"><canvas id="ep-trend-chart" role="img" aria-label="نمودار روند پیشرفت روزانه"></canvas></div><p class="ep-chart-note">محور افقی روزهای برنامه است؛ خط ممتد پیشرفت واقعی تو و خط‌چین طلایی مسیر ایده‌آل (هر روز یک روز) است.</p></article><article class="ep-chart-card"><div class="ep-chart-title"><h4>میانگین چهار شاخص</h4><span class="ep-chart-chip">۰ تا ۱۰۰</span></div><div class="ep-chart-wrap"><canvas id="ep-metrics-chart" role="img" aria-label="نمودار میانگین چهار شاخص"></canvas></div><div class="ep-metric-legend">${METRICS.map(m=>`<span><i style="background:${m.color}"></i>${m.label}</span>`).join('')}</div><p class="ep-chart-note">فقط روزهایی که برای شاخص مربوطه نمره ثبت شده باشد، در میانگین محاسبه می‌شوند.</p></article></div></section>
+        <div class="ep-section-heading ep-tools-heading"><div><h3>ابزارهای تمرین روزانه</h3><p>زمان‌سنج، تمرین مکالمه، ضبط صدا و دفترچه خطا؛ پس از کار اصلی روز.</p></div></div>
         <section class="ep-practice-tools" aria-label="ابزارهای کاربردی تمرین انگلیسی">
           <details class="ep-practice-card ep-pomodoro-card ep-collapsible-card">
             <summary class="ep-collapsible-summary" id="epTimerTitle"><span class="ep-collapsible-title">🍅 زمان‌سنج پومودورو</span></summary>
@@ -26998,39 +27032,10 @@ window.ENGLISH_PASSPORT_DAYS = [{"day":1,"title":"Day 001 — ارزیابی ا�
               <button type="button" class="ep-btn ep-btn-secondary" data-action="copy-speaking-prompt">📋 کپی موضوع و شروع جمله</button>
             </div>
           </article>
+          <article class="ep-practice-card ep-rec" data-ep-rec><h3>🎙️ ضبط و مقایسهٔ شدو‌اینگ</h3><p>یک جمله را از گوینده تقلید کن، ضبط کن و صدایت را با الگو مقایسه کن. ضبط‌ها فقط تا بستن صفحه در حافظه می‌مانند.</p><div class="ep-tool-row"><button type="button" class="ep-btn ep-btn-primary" data-ep-rec-btn>● شروع ضبط</button><span data-ep-rec-state>آماده</span></div><audio controls hidden data-ep-rec-audio></audio></article>
+          <article class="ep-practice-card ep-nb" data-ep-nb><h3>📒 دفترچه خطا و عبارت</h3><p>خطاهای تکراری و عبارت‌های خوب را ثبت کن؛ بعد برای تمرین هدفمند به مربی بده.</p><div class="ep-nb-form"><select data-nb-type aria-label="نوع مورد"><option value="err">خطا</option><option value="phr">عبارت</option></select><input dir="ltr" data-nb-a placeholder="My sentence / phrase" aria-label="جمله یا عبارت"><input dir="ltr" data-nb-b placeholder="Correct / more natural version" aria-label="نسخهٔ درست"><button type="button" class="ep-btn ep-btn-primary" data-nb-add>افزودن</button></div><ul class="ep-nb-list" data-nb-list></ul><div class="ep-tool-row"><button type="button" class="ep-btn ep-btn-secondary" data-nb-copy>📋 کپی برای مربی</button><button type="button" class="ep-btn ep-btn-secondary" data-nb-csv>⇩ CSV</button></div></article>
         </section>
-        <div class="ep-summary-grid">
-          <article class="ep-summary-card ep-overall-card"><div class="ep-summary-label">پیشرفت کل</div><div class="ep-overall-row"><div class="ep-ring" style="--ep-progress:${overall}"><span>${overall}<small>٪</small></span></div><div><strong>${count} از ${TOTAL_DAYS} روز</strong><p>${count === TOTAL_DAYS ? 'تبریک! تمام ۴۳۲ جلسهٔ برنامه را تکمیل کردی.' : `مرحله فعلی: ${activePhase} از ۱۱`}</p></div></div></article>
-          <article class="ep-summary-card"><div class="ep-summary-label">روزهای باقی‌مانده</div><div class="ep-stat-number">${TOTAL_DAYS-count}</div><p>از ${TOTAL_DAYS} روز کل برنامه</p></article>
-          <article class="ep-summary-card"><div class="ep-summary-label">روز بعدی قابل انجام</div><div class="ep-stat-number">${count === TOTAL_DAYS ? '✓' : Math.min(TOTAL_DAYS, firstIncompleteDay())}</div><p>${count === TOTAL_DAYS ? 'همه روزها تکمیل شده‌اند' : 'با تکمیل روز جاری، روز بعد باز می‌شود.'}</p></article>
-          <article class="ep-summary-card"><div class="ep-summary-label">آخرین ذخیره</div><div class="ep-stat-text">${escapeHTML(faDateTime(state.updatedAt))}</div><p>ذخیره محلی روی همین مرورگر</p></article>
-        </div>
         ${programGuideMarkup()}
-        <details class="ep-section ep-collapsible-section"><summary class="ep-section-heading ep-collapsible-summary"><span class="ep-collapsible-heading-copy"><strong>📈 پیشرفت مرحله‌ها</strong><small>بازه‌های مرحله‌ها مطابق برنامهٔ اصلی و متناسب با هر نقطهٔ عطف هستند.</small></span></summary><div class="ep-collapsible-content"><div class="ep-phase-grid">${phaseCards}</div></div></details>
-        <section class="ep-section" id="ep-checklist-section"><div class="ep-section-heading"><div><h3>چک‌لیست تعاملی ۴۳۲ جلسه‌ای</h3><p>هر روز ۳ ساعت برنامه دارد. برای خلوت ماندن صفحه، فقط مرحله انتخاب‌شده باز است؛ با «باز کردن همه مراحل» همه روزها را یکجا ببین.</p></div><div class="ep-legend"><span><i class="ep-dot done"></i> تکمیل‌شده</span><span><i class="ep-dot open"></i> قابل انجام</span><span><i class="ep-dot locked"></i> قفل</span></div></div><div class="ep-checklist-toolbar"><label class="ep-day-search-wrap"><span>جستجوی روز</span><input type="search" data-day-search placeholder="شماره یا عنوان روز را بنویس…" autocomplete="off" aria-label="جستجو در ۴۳۲ جلسه"><div class="ep-day-search-results" data-day-search-results hidden></div></label><div class="ep-phase-tabs">${PHASES.map((phase,i)=>`<button type="button" class="ep-phase-tab ${phaseFor(activeDay)===i+1?'active':''}" data-phase-jump="${i+1}">مرحله ${i+1} · ${phase.start}–${phase.end}</button>`).join('')}</div><div class="ep-checklist-tools"><label class="ep-day-filter-wrap"><span>نمایش روزها</span><select data-day-filter aria-label="فیلتر وضعیت روزها"><option value="all">همه روزها</option><option value="incomplete">تکمیل‌نشده‌ها</option><option value="complete">تکمیل‌شده‌ها</option><option value="available">روزهای قابل انجام</option></select></label><div class="ep-expand-actions"><button type="button" class="ep-btn ep-btn-secondary" data-action="toggle-all-phases" aria-expanded="${expandedPhases.size === PHASES.length ? 'true' : 'false'}">${expandedPhases.size === PHASES.length ? 'بستن همه مراحل' : 'باز کردن همه مراحل'}</button></div></div></div><div class="ep-phase-day-groups">${phaseDayGrids}</div>
-          <div class="ep-day-detail"><div class="ep-day-detail-heading"><div><span class="ep-eyebrow">${dayUnlocked ? 'روز قابل انجام' : 'روز قفل‌شده'}</span><h3>${escapeHTML(dayTitle(activeDay))}</h3><p>جلسه ${activeDay} از ۴۳۲ · مرحله ${phaseFor(activeDay)}${dayDate(activeDay) ? ' · تاریخ برنامه: ' + escapeHTML(dayDate(activeDay)) : ''}</p></div><span class="ep-status ${dayComplete?'complete':dayUnlocked?'open':'locked'}">${dayComplete?'تکمیل شده':dayUnlocked?'آماده شروع':'قفل است'}</span></div>
-          <div class="ep-day-quick-tools"><button type="button" class="ep-btn ep-btn-secondary ep-edit-day-button" data-action="toggle-day-content-editor" data-day="${activeDay}" aria-expanded="false">✏️ ویرایش محتوای روز</button><button type="button" class="ep-btn ep-btn-secondary" data-action="copy-day-summary" data-day="${activeDay}">📋 کپی خلاصه روز</button></div>
-          ${dayDetailMarkup(activeDay)}
-          ${dayContentEditorMarkup(activeDay)}
-          <section class="ep-lesson-notes" style="margin:14px 0;padding:14px;border:1px solid var(--ep-border,var(--line,#d8deea));border-radius:12px;background:var(--ep-surface,var(--surface,#fff))">
-            <h4 style="margin:0 0 6px">محتوای آموزشی روز ${activeDay}</h4>
-            <p style="margin:0 0 10px;color:var(--ep-muted,var(--ink-soft,#667085));font-size:12px;line-height:1.8">توضیحات کامل درس، متن Listening، عبارت‌ها، تمرین Speaking، گرامر و تکلیف این روز را اینجا وارد کن. محتوای هر روز جداگانه ذخیره می‌شود و در فایل پشتیبان برنامه هم قرار می‌گیرد.</p>
-            <textarea data-lesson-notes aria-label="محتوای آموزشی روز ${activeDay}" placeholder="محتوای آموزشی این روز را اینجا وارد یا ویرایش کن…" style="box-sizing:border-box;width:100%;min-height:220px;resize:vertical;padding:12px;border:1px solid var(--ep-border,var(--line,#d8deea));border-radius:10px;background:var(--ep-surface-soft,var(--surface-2,#f7f8fa));color:var(--ep-ink,var(--ink,#20242c));font:inherit;line-height:1.8;direction:rtl;text-align:right">${escapeHTML(typeof state.notes[String(activeDay)] === 'string' ? state.notes[String(activeDay)] : '')}</textarea>
-            <div class="ep-lesson-content-actions" style="display:flex;gap:10px;flex-wrap:nowrap;align-items:stretch;margin-top:12px;width:100%"><button type="button" class="ep-btn ep-btn-primary" data-action="save-lesson-notes">ذخیره محتوا</button><button type="button" class="ep-btn ep-btn-secondary" data-action="preview-lesson-notes">👁 پیش‌نمایش</button></div><div style="font-size:11px;margin-top:6px;color:var(--ep-muted,var(--ink-soft,#667085))">ذخیره محلی در همین مرورگر</div>
-            <div class="ep-lesson-preview-overlay" data-lesson-preview-overlay hidden role="presentation">
-              <section class="ep-lesson-preview-modal" role="dialog" aria-modal="true" aria-labelledby="ep-lesson-preview-title">
-                <header class="ep-lesson-preview-header"><h3 id="ep-lesson-preview-title">پیش‌نمایش محتوای آموزشی روز ${activeDay}</h3><button type="button" class="ep-btn ep-btn-secondary ep-lesson-preview-close" data-action="close-lesson-preview" aria-label="بستن پیش‌نمایش">✕</button></header>
-                <div class="ep-lesson-preview-body" data-lesson-preview-body></div>
-                <footer class="ep-lesson-preview-footer"><button type="button" class="ep-btn ep-btn-primary" data-action="close-lesson-preview">بستن پیش‌نمایش</button></footer>
-              </section>
-            </div>
-          </section>
-          <div class="ep-day-actions"><button type="button" class="ep-btn ep-btn-secondary" data-action="copy-day-title">کپی عنوان این روز</button>${findLessonTarget(activeDay) ? `<button type="button" class="ep-btn ep-btn-secondary" data-action="open-lesson" data-day="${activeDay}">رفتن به محتوای روز</button>` : ''}${dayUnlocked && !dayComplete ? `<button type="button" class="ep-btn ep-btn-primary" data-action="complete-day" data-day="${activeDay}">تکمیل روز ${activeDay}</button>` : ''}${dayComplete ? `<button type="button" class="ep-btn ep-btn-secondary" data-action="undo-day" data-day="${activeDay}">برگرداندن به حالت ناتمام</button>` : ''}${dayComplete && activeDay < TOTAL_DAYS && isUnlocked(nextDay) ? `<button type="button" class="ep-btn ep-btn-primary" data-action="next-day">رفتن به روز بعد ←</button>` : ''}</div>
-          <div class="ep-metrics-editor"><div class="ep-section-heading"><div><h4>ثبت شاخص‌های روز ${activeDay}</h4><p>برای هر شاخص عددی از ۰ تا ۱۰۰ انتخاب کن. ثبت شاخص‌ها مستقل از تیک تکمیل روز است.</p></div></div><div class="ep-metrics-grid">${dayMetrics}</div><div class="ep-metrics-actions"><button type="button" class="ep-btn ep-btn-secondary" data-action="save-metrics" ${dayUnlocked ? '' : 'disabled'}>ذخیره شاخص‌ها</button><span>مقدار «ثبت نشده» در نمودار به‌عنوان صفر یا نمره واقعی در نظر گرفته نمی‌شود.</span></div></div>
-        </div></section>
-        <details class="ep-section ep-assessment-section ep-collapsible-section"><summary class="ep-section-heading ep-collapsible-summary"><span class="ep-collapsible-heading-copy"><strong>📝 ارزیابی‌های دوره‌ای</strong><small>در روزهای مشخص مکث کن، نمونه‌های واقعی را بررسی کن و چهار شاخص را در پنل همان روز ثبت کن.</small></span></summary><div class="ep-collapsible-content"><div class="ep-assessment-table-wrap"><table class="ep-assessment-table"><thead><tr><th>روز</th><th>نقطهٔ ارزیابی</th><th>تمرکز ارزیابی</th><th>اقدام</th></tr></thead><tbody>${CHECKPOINTS.map(c=>`<tr><td>روز ${c.day}</td><td>${escapeHTML(c.title)}</td><td>${escapeHTML(c.focus)}</td><td><button type="button" class="ep-btn ep-btn-secondary ep-checkpoint-jump" data-checkpoint-day="${c.day}">رفتن به ارزیابی</button></td></tr>`).join('')}</tbody></table></div><p class="ep-assessment-intro">چهار معیار ارزیابی</p><ul class="ep-assessment-list"><li><strong>Listening:</strong> درک پیام اصلی، جزئیات و عبارت‌های پیوسته.</li><li><strong>Speaking:</strong> مدت صحبت مستقل، وضوح، پاسخ‌دادن و گسترش ایده.</li><li><strong>Naturalness:</strong> طبیعی‌بودن عبارت‌ها، اتصال کلمات و روانی بیان.</li><li><strong>IELTS:</strong> دقت پاسخ، مدیریت زمان و عملکرد متناسب با مهارت‌های آزمون.</li></ul><div class="ep-assessment-note" style="margin-top:14px">نتیجه را بر اساس نمونهٔ ضبط‌شده، پاسخ‌های درست و خطاهای واقعی ثبت کن؛ درصدها ابزار مقایسه‌اند، نه نمرهٔ رسمی CEFR یا IELTS.</div></div></details>
-        <section class="ep-section ep-coach-section"><div class="ep-section-heading"><div><h3>پرامپت مربی مکالمهٔ هوش مصنوعی</h3><p>متن را کپی کن و در گفت‌وگوی صوتی/متنی مربی قرار بده؛ عنوان روز را هم به آن بده.</p></div><button type="button" class="ep-btn ep-btn-primary" data-action="copy-coach-prompt">کپی پرامپت</button></div><textarea class="ep-coach-prompt-text" id="ep-coach-prompt" spellcheck="false">${escapeHTML(COACH_PROMPT)}</textarea><div class="ep-assessment-note" style="margin-top:12px">روش پیشنهادی: یک سؤال در هر نوبت، تمرکز روی صحبت‌کردن خودت، حداکثر سه خطای مهم در هر بازخورد و تکرار پاسخ اصلاح‌شده.</div></section>
-        <section class="ep-section"><div class="ep-section-heading"><div><h3>گزارش نموداری</h3><p>گزارش بر اساس داده‌هایی است که در همین مرورگر ثبت کرده‌ای.</p></div></div><div class="ep-chart-grid"><article class="ep-chart-card"><div class="ep-chart-title"><h4>روند پیشرفت</h4><select data-trend-mode aria-label="نوع روند"><option value="completed" ${trendMode==='completed'?'selected':''}>تعداد روزهای تکمیل‌شده</option><option value="percent" ${trendMode==='percent'?'selected':''}>درصد پیشرفت تجمعی</option></select></div><div class="ep-chart-wrap"><canvas id="ep-trend-chart" role="img" aria-label="نمودار روند پیشرفت روزانه"></canvas></div><p class="ep-chart-note">محور افقی روزهای برنامه است؛ خط ممتد پیشرفت واقعی تو و خط‌چین طلایی مسیر ایده‌آل (هر روز یک روز) است.</p></article><article class="ep-chart-card"><div class="ep-chart-title"><h4>میانگین چهار شاخص</h4><span class="ep-chart-chip">۰ تا ۱۰۰</span></div><div class="ep-chart-wrap"><canvas id="ep-metrics-chart" role="img" aria-label="نمودار میانگین چهار شاخص"></canvas></div><div class="ep-metric-legend">${METRICS.map(m=>`<span><i style="background:${m.color}"></i>${m.label}</span>`).join('')}</div><p class="ep-chart-note">فقط روزهایی که برای شاخص مربوطه نمره ثبت شده باشد، در میانگین محاسبه می‌شوند.</p></article></div></section>
         <footer class="ep-footer"><span>اطلاعات پیشرفت و تیک‌های این بخش فقط روی همین مرورگر ذخیره می‌شوند و خودکار بین دستگاه‌ها همگام نمی‌شوند. برای اطمینان، خروجی پشتیبان بگیر و نتیجهٔ ارزیابی‌ها/یادداشت‌های مهم را در فایل یا دفترچه‌ای جداگانه هم نگه دار.</span><button type="button" class="ep-text-button" data-action="reset">پاک‌کردن تمام پیشرفت‌ها</button></footer><div id="ep-toast" class="ep-toast" hidden></div>
       </div>`;
     bindEvents(root);
@@ -27699,21 +27704,21 @@ body.ep-in-leitner #leitnerFloatingBtn{display:none!important}
 
   /* ---------- hero chips + call-to-action (page header) ---------- */
   function drawHero(){
-    var chips = document.getElementById("ep300Chips"), cta = document.getElementById("ep300Cta"); if(!chips) return;
+    var chips = document.getElementById("ep180Chips") || document.getElementById("ep300Chips"), cta = document.getElementById("ep180Cta") || document.getElementById("ep300Cta"); if(!chips) return;
     var p = P(), s = p.state(), done = s.completed.length, pt = planToday(), html = "";
-    html += '<span class="ep300-chip good">✓ ' + fa(done) + " از ۴۳۲ جلسه</span>";
+    html += '<span class="ep180-chip good">✓ ' + fa(done) + " از ۴۳۲ جلسه</span>";
     if(pt != null){
-      if(pt < 1) html += '<span class="ep300-chip">شروع برنامه: ' + esc(p.faDate(p.dayISO(1))) + "</span>";
-      else if(pt > 432) html += '<span class="ep300-chip">زمان برنامه تمام شده</span>';
+      if(pt < 1) html += '<span class="ep180-chip">شروع برنامه: ' + esc(p.faDate(p.dayISO(1))) + "</span>";
+      else if(pt > 432) html += '<span class="ep180-chip">زمان برنامه تمام شده</span>';
       else {
-        html += '<span class="ep300-chip">📅 امروز: روز ' + fa(pt) + " برنامه</span>";
+        html += '<span class="ep180-chip">📅 امروز: روز ' + fa(pt) + " برنامه</span>";
         var d = done - Math.min(pt - 1, 432);
-        html += d === 0 ? '<span class="ep300-chip good">طبق برنامه</span>'
-          : d > 0 ? '<span class="ep300-chip good">' + fa(d) + " روز جلوتر از برنامه</span>"
-          : '<span class="ep300-chip ' + (d < -7 ? "bad" : "warn") + '">' + fa(-d) + " روز عقب‌تر از برنامه</span>";
+        html += d === 0 ? '<span class="ep180-chip good">طبق برنامه</span>'
+          : d > 0 ? '<span class="ep180-chip good">' + fa(d) + " روز جلوتر از برنامه</span>"
+          : '<span class="ep180-chip ' + (d < -7 ? "bad" : "warn") + '">' + fa(-d) + " روز عقب‌تر از برنامه</span>";
       }
     }
-    var st = streak(); if(st > 0) html += '<span class="ep300-chip warn">🔥 ' + fa(st) + " روز پیاپی</span>";
+    var st = streak(); if(st > 0) html += '<span class="ep180-chip warn">🔥 ' + fa(st) + " روز پیاپی</span>";
     chips.innerHTML = html;
     if(cta){
       cta.innerHTML = "";
@@ -27730,13 +27735,13 @@ body.ep-in-leitner #leitnerFloatingBtn{display:none!important}
   function enhance(root){
     var p = P(); if(!p) return;
     var s = p.state(), day = p.activeDay(), unlocked = p.isUnlocked(day), complete = p.isComplete(day), pt = planToday();
-    s.tasks = s.tasks || {}; s.notes = s.notes || {};
+    s.tasks = s.tasks || {}; s.notes = s.notes || {}; s.journal = s.journal || {}; s.tools = s.tools || {};
 
     /* today marker + note marker on the day grid */
     root.querySelectorAll(".ep-day[data-select-day]").forEach(function(b){
       var d = Number(b.dataset.selectDay);
       if(pt === d) b.classList.add("is-today");
-      if(s.notes[d]) b.classList.add("has-note");
+      if(s.notes[d] || s.journal[d]) b.classList.add("has-note");
     });
 
     drawHero();
@@ -27807,12 +27812,12 @@ body.ep-in-leitner #leitnerFloatingBtn{display:none!important}
       var notes = el("section", { class:"ep-extra ep-notes" },
         "<h4>📝 یادداشت امروز</h4><p class='hint'>مشکلات، چیزهایی که یاد گرفتی و عبارت‌های جدید (بخش «ثبت پیشرفت» برنامه).</p>" +
         "<textarea placeholder='مثلاً: در زمان گذشته اشتباه کردم…' aria-label='یادداشت روز'></textarea>");
-      var ta = notes.querySelector("textarea"); ta.value = s.notes[day] || ""; if(!unlocked) ta.disabled = true;
+      var ta = notes.querySelector("textarea"); ta.value = s.journal[day] || ""; if(!unlocked) ta.disabled = true;
       var timer;
       ta.addEventListener("input", function(){
         clearTimeout(timer);
         timer = setTimeout(function(){
-          var v = ta.value.trim(); if(v) s.notes[day] = ta.value; else delete s.notes[day];
+          var v = ta.value.trim(); if(v) s.journal[day] = ta.value; else delete s.journal[day];
           p.saveQuiet();
           var cell = root.querySelector('.ep-day[data-select-day="' + day + '"]'); if(cell) cell.classList.toggle("has-note", !!v);
         }, 400);
@@ -28413,6 +28418,102 @@ body.ep-in-leitner #leitnerFloatingBtn{display:none!important}
 #english-passport-progress .ep-day-quick-tools .ep-btn{max-width:100%;white-space:normal;line-height:1.45}
 @media(max-width:560px){#english-passport-progress .ep-expand-actions .ep-btn,#english-passport-progress .ep-day-quick-tools .ep-btn{flex:1 1 100%;min-width:0}}
 </style>
+<style id="ep-roadmap-unified-final">
+/* Final, single source of truth for the roadmap page. Theme tokens only (light/dark follow the app). */
+#english-passport-progress .ep-shell{--ep-dash-accent:var(--green)!important;--ep-accent:var(--green)!important;display:flex!important;flex-direction:column;gap:18px!important}
+#english-passport-progress .ep-header{display:none!important}
+#english-passport-progress .ep-shell>*{margin-top:0!important;margin-bottom:0!important}
+#english-passport-progress .ep-overall-card{background:linear-gradient(130deg,var(--green-bg),var(--surface) 78%)!important;border-color:var(--green)!important}
+#english-passport-progress .ep-phase-card-button.is-current{border-color:var(--green)!important;background:linear-gradient(90deg,var(--green-bg),var(--surface) 60%)!important;box-shadow:none!important}
+#english-passport-progress .ep-phase-card-button.is-current .ep-phase-number:after{color:var(--green)!important}
+#english-passport-progress .ep-collapsible-card,#english-passport-progress .ep-collapsible-section,#english-passport-progress .ep-collapsible-card>.ep-collapsible-summary{background:var(--surface)!important;border-color:var(--line)!important;color:var(--ink)!important}
+#english-passport-progress .ep-collapsible-summary::after{background:var(--hover)!important;border-color:var(--line)!important;color:var(--ink)!important;box-shadow:none!important}
+#english-passport-progress details[open]>.ep-collapsible-summary::after{background:var(--green-bg)!important;border-color:var(--green)!important;color:var(--green)!important}
+#english-passport-progress .ep-collapsible-hint{background:var(--hover)!important;border-color:var(--line)!important;color:var(--ink-soft)!important}
+#english-passport-progress .ep-tools-heading{padding-bottom:10px;border-bottom:1px solid var(--line)}
+#english-passport-progress .ep-tools-heading h3{margin:0 0 4px}
+#english-passport-progress .ep-tools-heading p{margin:0;color:var(--ink-soft);font-size:12.5px;line-height:1.8}
+#english-passport-progress .ep-practice-tools{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))!important;gap:12px!important;align-items:start}
+#english-passport-progress .ep-day-grid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(46px,1fr))!important;gap:6px!important}
+#english-passport-progress .ep-day{min-height:44px!important;font-size:13px!important}
+#english-passport-progress .ep-phase-tabs{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:8px!important}
+#english-passport-progress .ep-phase-tab{flex:0 0 auto;scroll-snap-align:start;white-space:nowrap}
+#english-passport-progress .ep-lesson-notes{margin:14px 0;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+#english-passport-progress .ep-lesson-notes h4{margin:0 0 6px}
+#english-passport-progress .ep-lesson-notes>p{margin:0 0 10px;color:var(--ink-soft);font-size:12px;line-height:1.8}
+#english-passport-progress .ep-lesson-notes textarea[data-lesson-notes]{box-sizing:border-box;width:100%;min-height:200px;resize:vertical;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--ink);font:inherit;line-height:1.8;direction:rtl;text-align:right}
+#english-passport-progress .ep-lesson-content-actions{display:flex;gap:10px;margin-top:12px}
+#english-passport-progress .ep-lesson-content-actions .ep-btn{flex:1}
+#english-passport-progress .ep-lesson-notes>div:not([class]){margin-top:6px;font-size:11px;color:var(--ink-soft)}
+#english-passport-progress .ep-week-dots{display:flex;gap:6px;margin:4px 0 10px}
+#english-passport-progress .ep-week-dots i{flex:1;height:10px;border-radius:5px;background:var(--line)}
+#english-passport-progress .ep-week-dots i.on{background:var(--green)}
+#english-passport-progress .ep-nb-form{display:grid;grid-template-columns:auto 1fr;gap:8px;margin:10px 0}
+#english-passport-progress .ep-nb-form input,#english-passport-progress .ep-nb-form select{min-width:0;min-height:42px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit}
+#english-passport-progress .ep-nb-form input,#english-passport-progress .ep-nb-form button{grid-column:1/-1}
+#english-passport-progress .ep-nb-list{list-style:none;margin:8px 0;padding:0;display:grid;gap:6px}
+#english-passport-progress .ep-nb-list li{display:flex;flex-wrap:wrap;gap:2px 8px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);font-size:12.5px;line-height:1.7}
+#english-passport-progress .ep-nb-list li span{flex:1 1 100%;overflow-wrap:anywhere}
+#english-passport-progress .ep-nb-list li button{margin-inline-start:auto;min-width:32px;min-height:32px;border:0;border-radius:8px;background:var(--hover);color:var(--ink-soft);cursor:pointer}
+#english-passport-progress .ep-nb-list li.empty{color:var(--ink-soft)}
+#english-passport-progress [data-ep-rec-audio]{display:block;width:100%;margin-top:10px}
+#english-passport-progress [data-ep-rec-audio][hidden]{display:none}
+#english-passport-progress :where(button,input,select,textarea,summary):focus-visible{outline:3px solid var(--green);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){#english-passport-progress *{transition:none!important;animation:none!important}}
+</style>
+<script id="ep-roadmap-tools-v1">
+(function(){'use strict';
+var P=function(){return window.__epPlan},fa=function(n){return String(n).replace(/\d/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[d]})};
+var esc=function(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var iso=function(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+var OPEN=new Map(),lastRec=null,mr=null,chunks=[];
+function key(d){var s=d.querySelector('summary');return (s?s.textContent:'').trim().slice(0,24)}
+function ago(n){var d=new Date();d.setDate(d.getDate()-n);return iso(d)}
+function week(root){var c=root.querySelector('[data-ep-week]');if(!c)return;var s=P().state(),days={};
+ Object.keys(s.doneAt||{}).forEach(function(k){var d=new Date(s.doneAt[k]);if(!isNaN(d)){var q=iso(d);days[q]=(days[q]||0)+1}});
+ var dots='',n=0,t7=0,t14=0,i;for(i=6;i>=0;i--){var v=days[ago(i)]||0;n+=v?1:0;t7+=v;dots+='<i class="'+(v?'on':'')+'" title="'+ago(i)+'"></i>'}
+ for(i=13;i>=0;i--)t14+=days[ago(i)]||0;
+ var left=432-s.completed.length,rate=t14/14,eta='';
+ if(left>0&&rate>0){var e=new Date();e.setDate(e.getDate()+Math.ceil(left/rate));eta='با ریتم ۱۴ روز اخیر، پایان برنامه ≈ '+esc(P().faDate(iso(e)))}
+ else if(left>0)eta='با تکمیل چند روز، پیش‌بینی پایان برنامه اینجا ظاهر می‌شود.';
+ c.innerHTML='<div class="ep-summary-label">ریتم هفتهٔ اخیر</div><div class="ep-week-dots" role="img" aria-label="'+n+' روز فعال از ۷ روز اخیر">'+dots+'</div><div class="ep-stat-text">'+fa(n)+' از ۷ روز فعال · '+fa(t7)+' جلسه</div><p>'+eta+'</p>'}
+function nb(root){var l=root.querySelector('[data-nb-list]');if(!l)return;var a=P().state().tools.nb=P().state().tools.nb||[];
+ l.innerHTML=a.slice(-6).reverse().map(function(x){return '<li><b>'+(x.t==='err'?'خطا':'عبارت')+'</b><button type="button" data-nb-del="'+x.id+'" aria-label="حذف">×</button><span dir="ltr">'+esc(x.a)+'</span>'+(x.b?'<span dir="ltr">→ '+esc(x.b)+'</span>':'')+'</li>'}).join('')||'<li class="empty">هنوز موردی ثبت نشده.</li>'}
+async function rec(btn,root){var st=root.querySelector('[data-ep-rec-state]');
+ if(mr&&mr.state==='recording'){mr.stop();return}
+ if(!navigator.mediaDevices||!window.MediaRecorder){P().toast('این مرورگر ضبط صدا را پشتیبانی نمی‌کند.');return}
+ try{var stream=await navigator.mediaDevices.getUserMedia({audio:true});chunks=[];mr=new MediaRecorder(stream);
+  mr.ondataavailable=function(e){chunks.push(e.data)};
+  mr.onstop=function(){stream.getTracks().forEach(function(t){t.stop()});if(lastRec)URL.revokeObjectURL(lastRec);
+   lastRec=URL.createObjectURL(new Blob(chunks,{type:mr.mimeType||'audio/webm'}));
+   var r=document.getElementById('english-passport-progress');if(!r)return;
+   var a=r.querySelector('[data-ep-rec-audio]'),b=r.querySelector('[data-ep-rec-btn]'),m=r.querySelector('[data-ep-rec-state]');
+   if(a){a.src=lastRec;a.hidden=false}if(b)b.textContent='● ضبط جدید';if(m)m.textContent='پخش کن و با الگو مقایسه کن'};
+  mr.start();btn.textContent='■ توقف';if(st)st.textContent='در حال ضبط…'}
+ catch(_){P().toast('اجازهٔ میکروفون داده نشد.')}}
+function bind(root){if(root.__epTools)return;root.__epTools=1;
+ root.addEventListener('toggle',function(e){if(e.target.tagName==='DETAILS')OPEN.set(key(e.target),e.target.open)},true);
+ root.addEventListener('click',async function(e){var t=e.target.closest('button');if(!t)return;var p=P(),s=p.state();s.tools=s.tools||{};var a=s.tools.nb=s.tools.nb||[];
+  if(t.matches('[data-nb-add]')){var w=t.closest('[data-ep-nb]'),x=w.querySelector('[data-nb-a]'),y=w.querySelector('[data-nb-b]');
+   if(!x.value.trim()){x.focus();return}
+   a.push({id:Date.now(),day:p.activeDay(),t:w.querySelector('[data-nb-type]').value,a:x.value.trim(),b:y.value.trim()});
+   p.saveQuiet();x.value='';y.value='';nb(root);x.focus()}
+  else if(t.dataset.nbDel){var i=a.findIndex(function(z){return String(z.id)===t.dataset.nbDel});if(i>-1){a.splice(i,1);p.saveQuiet();nb(root)}}
+  else if(t.matches('[data-nb-copy]')){var r=a.slice(-20);if(!r.length){p.toast('ابتدا چند مورد در دفترچه ثبت کن.');return}
+   var txt='You are my English coach. Below are my recent mistakes and phrases with corrections. Create 8 short drills, one at a time, and wait for my answer after each.\n\n'+r.map(function(z){return (z.t==='err'?'MISTAKE: ':'PHRASE: ')+z.a+(z.b?' => '+z.b:'')}).join('\n');
+   try{await navigator.clipboard.writeText(txt);p.toast('کپی شد؛ برای مربی هوشمند Paste کن.')}catch(_){p.toast('کپی انجام نشد.')}}
+  else if(t.matches('[data-nb-csv]')){var q=function(v){return '"'+String(v).replace(/"/g,'""')+'"'};
+   var csv='\ufefftype,day,text,correction\n'+a.map(function(z){return [z.t,z.day,q(z.a),q(z.b)].join(',')}).join('\n');
+   var u=URL.createObjectURL(new Blob([csv],{type:'text/csv'})),l=document.createElement('a');l.href=u;l.download='english-notebook.csv';l.click();setTimeout(function(){URL.revokeObjectURL(u)},1000)}
+  else if(t.matches('[data-ep-rec-btn]'))rec(t,root)})}
+var old=window.__epPlanEnhance;
+window.__epPlanEnhance=function(root){try{if(old)old(root)}catch(e){console.warn(e)}
+ var s=P().state();s.tools=s.tools||{};s.journal=s.journal||{};bind(root);
+ root.querySelectorAll('details').forEach(function(d){var k=key(d);if(OPEN.has(k))d.open=OPEN.get(k)});
+ week(root);nb(root);
+ if(lastRec){var a=root.querySelector('[data-ep-rec-audio]');if(a){a.src=lastRec;a.hidden=false}}}
+})();
+</script>
 </body></html>
 <style id="ep-collapsible-panels-v1">
 #english-passport-progress .ep-collapsible-card,#english-passport-progress .ep-collapsible-section{overflow:hidden;}
